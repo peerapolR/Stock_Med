@@ -97,7 +97,7 @@ export default function ReportPDF({ data, reportDate, reportType }) {
               <Text style={styles.tableCellHeader}>SKU</Text>
             </View>
             <View style={styles.tableColHeader}>
-              <Text style={{ ...styles.tableCellHeader, width: "200%" }}>
+              <Text style={{ ...styles.tableCellHeader, width: "100%" }}>
                 ชื่อสินค้า
               </Text>
             </View>
