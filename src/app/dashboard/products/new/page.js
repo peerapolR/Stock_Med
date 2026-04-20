@@ -102,7 +102,7 @@ export default function NewProductPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm font-medium">
+        <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm font-medium shadow-sm flex items-center gap-2">
           ❌ {error}
         </div>
       )}

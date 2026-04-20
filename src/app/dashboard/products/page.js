@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Search, PackageOpen, ArrowLeft } from "lucide-react";
+import { Search, PackageOpen, ArrowLeft, Edit3 } from "lucide-react";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -104,6 +104,13 @@ export default function ProductsPage() {
                     {product.category}
                   </span>
                 </h2>
+
+                <Link
+                  href={`/dashboard/products/edit/${product._id}`}
+                  className="flex items-center gap-1.5 text-sm text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition"
+                >
+                  <Edit3 size={16} /> แก้ไขข้อมูล
+                </Link>
               </div>
 
               {/* === สำหรับหน้าจอขนาดกลาง-ใหญ่ (Tablet/Desktop) === */}
