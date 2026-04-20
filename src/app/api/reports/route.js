@@ -60,6 +60,7 @@ export async function GET(req) {
           quantity: 1,
           performedBy: 1,
           date: 1,
+          destination: 1,
           productName: { $arrayElemAt: ["$productData.name", 0] },
         },
       },

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ReportPDF from "@/components/ReportPDF";
 
-import { ArrowLeft } from "lucide-react";
+import { House } from "lucide-react";
 
 export default function ReportsPage() {
   const router = useRouter();
@@ -62,12 +62,12 @@ export default function ReportsPage() {
   return (
     <div className="p-8 max-w-6xl mx-auto min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div className="flex">
+        <div className="flex gap-5">
           <button
             onClick={() => router.back()}
-            className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer mr-3"
+            className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer flex mb-6"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <House className="w-5 h-5 text-gray-600" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">
@@ -97,7 +97,6 @@ export default function ReportsPage() {
           </PDFDownloadLink>
         )}
       </div>
-
       {/* Filter Bar */}
       <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-wrap gap-4 mb-6 items-end">
         {/* เลือกโหมดดูรายงาน */}
@@ -168,26 +167,25 @@ export default function ReportsPage() {
           ล้างเวลา (ดูทั้งหมด)
         </button>
       </div>
-
-      {/* Table Data (เหมือนเดิม) */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-600">
             <thead className="bg-gray-50 text-gray-700 text-xs uppercase">
               <tr>
-                <th className="px-6 py-4 font-medium">วัน/เวลา</th>
-                <th className="px-6 py-4 font-medium">รายการ</th>
-                <th className="px-6 py-4 font-medium">SKU</th>
-                <th className="px-6 py-4 font-medium">ชื่อสินค้า</th>
-                <th className="px-6 py-4 font-medium text-right">จำนวน</th>
-                <th className="px-6 py-4 font-medium">ผู้ทำรายการ</th>
+                <th className="px-4 py-4 font-bold">วัน/เวลา</th>
+                <th className="px-4 py-4 font-bold">รายการ</th>
+                <th className="px-4 py-4 font-bold">ส่งไปที่ไหน</th>
+                <th className="px-4 py-4 font-bold">SKU</th>
+                <th className="px-4 py-4 font-bold">ชื่อสินค้า</th>
+                <th className="px-4 py-4 font-bold text-right">จำนวน</th>
+                <th className="px-4 py-4 font-bold text-right">ผู้ทำรายการ</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
                   <td
-                    colSpan="6"
+                    colSpan="7"
                     className="px-6 py-12 text-center text-gray-400"
                   >
                     กำลังโหลดข้อมูล...
@@ -196,10 +194,10 @@ export default function ReportsPage() {
               ) : transactions.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="6"
+                    colSpan="7"
                     className="px-6 py-12 text-center text-gray-400"
                   >
-                    ไม่พบข้อมูลในช่วงเวลา/ประเภทที่เลือก
+                    ไม่พบข้อมูลในช่วงเวลาที่เลือก
                   </td>
                 </tr>
               ) : (
@@ -208,34 +206,64 @@ export default function ReportsPage() {
                     key={tx._id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="border-b border-gray-50 hover:bg-gray-50/50 transition whitespace-nowrap"
+                    transition={{ delay: idx * 0.03 }}
+                    className="border-b border-gray-50 hover:bg-gray-50/50 transition text-xs md:text-sm"
                   >
-                    <td className="px-6 py-4 ">
-                      {new Date(tx.date).toLocaleString("th-TH")}
+                    {/* 1. วัน/เวลา */}
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-500">
+                      {new Date(tx.date).toLocaleString("th-TH", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </td>
-                    <td className="px-6 py-4 font-medium ">
+
+                    {/* 2. รายการ (Badge สี) */}
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {tx.type === "IN" ? (
-                        <span className="text-green-600 bg-green-50 px-2 py-1 rounded-md text-xs">
+                        <span className="text-green-600 bg-green-50 px-2 py-1 rounded-md font-bold text-[10px]">
                           นำเข้า
                         </span>
                       ) : (
-                        <span className="text-red-600 bg-red-50 px-2 py-1 rounded-md text-xs">
+                        <span className="text-red-600 bg-red-50 px-2 py-1 rounded-md font-bold text-[10px]">
                           ขายออก
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 font-mono text-gray-800 ">
+
+                    {/* 3. ส่งไปที่ไหน */}
+                    <td className="px-4 py-4">
+                      <span className="text-gray-700 font-medium">
+                        {tx.destination || "-"}
+                      </span>
+                    </td>
+
+                    {/* 4. SKU */}
+                    <td className="px-4 py-4 font-mono text-gray-600">
                       {tx.sku}
                     </td>
-                    <td className="px-6 py-4 ">{tx.productName || "-"}</td>
+
+                    {/* 5. ชื่อสินค้า */}
+                    <td className="px-4 py-4">
+                      <p className="font-medium text-gray-800 line-clamp-1">
+                        {tx.productName || "-"}
+                      </p>
+                    </td>
+
+                    {/* 6. จำนวน */}
                     <td
-                      className={`px-6 py-4 text-right font-bold ${tx.type === "IN" ? "text-green-600" : "text-red-600"}`}
+                      className={`px-4 py-4 text-right font-bold ${tx.type === "IN" ? "text-green-600" : "text-red-600"}`}
                     >
                       {tx.type === "IN" ? "+" : "-"}
-                      {tx.quantity}
+                      {tx.quantity.toLocaleString()}
                     </td>
-                    <td className="px-6 py-4">{tx.performedBy}</td>
+
+                    {/* 7. ผู้ทำรายการ */}
+                    <td className="px-4 py-4 text-right text-gray-500 italic text-xs">
+                      {tx.performedBy}
+                    </td>
                   </motion.tr>
                 ))
               )}

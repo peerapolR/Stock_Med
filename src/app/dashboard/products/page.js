@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Search, PackageOpen, ArrowLeft, Edit3 } from "lucide-react";
+import { Search, PackageOpen, House, Edit3 } from "lucide-react";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -51,12 +51,12 @@ export default function ProductsPage() {
     <div className="p-4 md:p-8 max-w-5xl mx-auto">
       {/* Header Section (เรียงแนวตั้งบนมือถือ แนวนอนบนคอม) */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <div className="flex">
+        <div className="flex gap-5">
           <button
             onClick={() => router.back()}
-            className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer mr-3"
+            className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer flex mb-6"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+            <House className="w-5 h-5 text-gray-600" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">

@@ -36,6 +36,7 @@ const transactionSchema = new mongoose.Schema({
   type: { type: String, enum: ["IN", "OUT"], required: true },
   sku: { type: String, required: true },
   quantity: { type: Number, required: true },
+  destination: { type: String },
   performedBy: { type: String, required: true }, // ชื่อคนทำรายการ
   date: { type: Date, default: Date.now },
 });

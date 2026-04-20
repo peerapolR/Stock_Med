@@ -35,7 +35,7 @@ export default function EditProductPage() {
   const handleAddVariant = () => {
     setVariants([
       ...variants,
-      { sku: "", size: "", weight: "", type: "แพ็ค", currentStock: 0 },
+      { sku: "", size: "", weight: "", type: "", currentStock: 0 },
     ]);
   };
 

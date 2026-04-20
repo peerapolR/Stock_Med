@@ -5,7 +5,9 @@ import { Product, Transaction } from "@/models";
 export async function POST(req) {
   try {
     await connectMongo();
-    const { sku, quantity, performedBy } = await req.json();
+
+    // ✅ 1. เพิ่ม destination ไว้ในปีกกา เพื่อรับค่าจากฝั่งหน้าเว็บ
+    const { sku, quantity, destination, performedBy } = await req.json();
 
     if (!sku || !quantity) {
       return NextResponse.json(
@@ -16,7 +18,7 @@ export async function POST(req) {
 
     const qtyNumber = parseInt(quantity, 10);
 
-    // 1. ค้นหาสินค้าที่มี SKU ตรงกัน
+    // ค้นหาสินค้า
     const product = await Product.findOne({ "variants.sku": sku });
 
     if (!product) {
@@ -26,7 +28,7 @@ export async function POST(req) {
       );
     }
 
-    // 2. ตรวจสอบว่าสต๊อกพอให้ตัดหรือไม่
+    // เช็คสต๊อกว่าพอให้ตัดหรือไม่
     const variant = product.variants.find((v) => v.sku === sku);
     if (variant.currentStock < qtyNumber) {
       return NextResponse.json(
@@ -38,19 +40,20 @@ export async function POST(req) {
       );
     }
 
-    // 3. อัปเดตตัดสต๊อก (ลดจำนวน currentStock ลง)
+    // ✅ 2. แก้ไข Mongoose Warning โดยใช้ returnDocument: 'after' แทน new: true
     await Product.findOneAndUpdate(
       { "variants.sku": sku },
       { $inc: { "variants.$.currentStock": -qtyNumber } },
-      { new: true },
+      { returnDocument: "after" },
     );
 
-    // 4. บันทึกประวัติ (Transaction) สำหรับไปทำ Report
+    // ✅ 3. บันทึกประวัติและใส่ destination ที่รับมา
     await Transaction.create({
       type: "OUT",
       sku: sku,
       quantity: qtyNumber,
-      performedBy: performedBy || "System", // เดี๋ยวค่อยเปลี่ยนเป็นชื่อ User จากระบบ Login
+      destination: destination,
+      performedBy: performedBy || "System",
     });
 
     return NextResponse.json({

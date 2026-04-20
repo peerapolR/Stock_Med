@@ -14,6 +14,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   PackagePlus,
+  Newspaper,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -239,11 +240,25 @@ export default function DashboardPage() {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="bg-white p-4 rounded-2xl border border-gray-200 flex items-center justify-between cursor-pointer hover:border-black transition"
+                className="bg-white p-4 rounded-2xl border border-gray-200 flex items-center justify-between cursor-pointer hover:border-black transition mb-4"
               >
                 <div className="flex items-center gap-3 text-gray-700">
                   <Printer className="w-6 h-6" />
                   <span className="font-medium">พิมพ์ QR Code สินค้า</span>
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-800" />
+              </motion.div>
+            </Link>
+
+            <Link href="/dashboard/reports">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="bg-white p-4 rounded-2xl border border-gray-200 flex items-center justify-between cursor-pointer hover:border-black transition"
+              >
+                <div className="flex items-center gap-3 text-gray-700">
+                  <Newspaper className="w-6 h-6" />
+                  <span className="font-medium">รายงาน</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-gray-800" />
               </motion.div>

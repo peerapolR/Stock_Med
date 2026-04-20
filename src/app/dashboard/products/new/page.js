@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, ArrowLeft, Package, CheckCircle2 } from "lucide-react";
@@ -15,14 +15,14 @@ export default function NewProductPage() {
 
   // State สำหรับจัดการ Variants (เริ่มต้นให้มี 1 รายการ)
   const [variants, setVariants] = useState([
-    { sku: "", size: "", weight: "", type: "แพ็ค", currentStock: 0 },
+    { sku: "", size: "", weight: "", type: "ถุง/ห่อ", currentStock: 0 },
   ]);
 
   // ฟังก์ชันเพิ่ม Variant ใหม่
   const handleAddVariant = () => {
     setVariants([
       ...variants,
-      { sku: "", size: "", weight: "", type: "แพ็ค", currentStock: 0 },
+      { sku: "", size: "", weight: "", type: "ถุง/ห่อ", currentStock: 0 },
     ]);
   };
 
@@ -221,15 +221,14 @@ export default function NewProductPage() {
                         }
                         className="w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-black text-sm bg-white"
                       >
-                        <option value="แพ็ค">แพ็ค</option>
-                        <option value="ถุง">ถุง</option>
-                        <option value="ซอง">ซอง</option>
+                        <option value="ถุง/ห่อ">ถุง/ห่อ</option>
+                        <option value="กระสอบ">กระสอบ</option>
+                        <option value="ลัง/กล่อง">ลัง/กล่อง</option>
                         <option value="ขวด">ขวด</option>
                         <option value="ชิ้น">ชิ้น</option>
                       </select>
                     </div>
 
-                    {/* ขนาด/น้ำหนัก */}
                     <div>
                       <label className="block text-xs font-medium text-gray-500 mb-1">
                         ขนาด/น้ำหนัก

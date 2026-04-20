@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { PackagePlus, Search, CheckCircle2, ArrowLeft } from "lucide-react";
+import { PackagePlus, Search, CheckCircle2, House } from "lucide-react";
 
 export default function RestockPage() {
   const router = useRouter();
@@ -106,12 +106,12 @@ export default function RestockPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-2xl mx-auto min-h-screen">
-      <div className="mb-6 flex">
+      <div className="mb-6 flex gap-5">
         <button
           onClick={() => router.back()}
-          className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer mr-3"
+          className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer flex mb-6"
         >
-          <ArrowLeft className="w-5 h-5 text-gray-600" />
+          <House className="w-5 h-5 text-gray-600" />
         </button>
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
