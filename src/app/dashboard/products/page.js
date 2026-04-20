@@ -21,15 +21,24 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter((product) => {
-    const matchName = product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchSku = product.variants.some((variant) =>
-      variant.sku.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-    return matchName || matchSku;
-  });
+  const filteredProducts = products
+    .filter((product) => {
+      const matchName = product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const matchSku = product.variants.some((variant) =>
+        variant.sku.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+
+      return matchName || matchSku;
+    })
+    .sort((a, b) => {
+      const skuA = a.variants[0]?.sku || "";
+      const skuB = b.variants[0]?.sku || "";
+
+      return skuA.localeCompare(skuB);
+    });
 
   if (loading)
     return (

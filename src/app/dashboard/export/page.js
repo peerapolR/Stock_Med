@@ -5,19 +5,16 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import QRCode from "qrcode";
 import ProductPDF from "@/components/ProductPDF";
 import { motion } from "framer-motion";
-
-import { House } from "lucide-react";
+import { FileDown, Loader2, Printer, House } from "lucide-react";
 
 export default function ExportPage() {
   const router = useRouter();
-
   const [pdfData, setPdfData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDataAndGenerateQR = async () => {
       try {
-        // 1. ดึงข้อมูลสินค้าจาก API ที่เราทำไว้ตอนแรก
         const res = await fetch("/api/products");
         const result = await res.json();
 
@@ -25,17 +22,12 @@ export default function ExportPage() {
 
         const flattenedData = [];
 
-        // 2. แตกข้อมูลสินค้าและสร้าง QR Code เป็น Base64
         for (const product of result.data) {
           for (const variant of product.variants) {
-            // สร้าง QR Code จาก SKU
             const qrDataUrl = await QRCode.toDataURL(variant.sku, {
               margin: 1,
               width: 150,
-              color: {
-                dark: "#000000",
-                light: "#ffffff",
-              },
+              color: { dark: "#000000", light: "#ffffff" },
             });
 
             flattenedData.push({
@@ -44,10 +36,17 @@ export default function ExportPage() {
               size: variant.size,
               weight: variant.weight,
               type: variant.type,
-              qrDataUrl: qrDataUrl, // เก็บรูปภาพไว้โยนเข้า PDF
+              qrDataUrl: qrDataUrl,
             });
           }
         }
+
+        flattenedData.sort((a, b) =>
+          a.sku.localeCompare(b.sku, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          }),
+        );
 
         setPdfData(flattenedData);
       } catch (error) {
@@ -62,14 +61,17 @@ export default function ExportPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] gap-3">
+        <Loader2 className="animate-spin h-10 w-10 text-black" />
+        <p className="text-gray-500 animate-pulse">
+          กำลังจัดเตรียมข้อมูลและสร้าง QR Code...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto flex flex-col items-center">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto flex flex-col items-center">
       <button
         onClick={() => router.back()}
         className="p-2 hover:bg-gray-100 rounded-full transition cursor-pointer flex mb-6"
@@ -80,48 +82,53 @@ export default function ExportPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center w-full"
+        className="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100 text-center w-full"
       >
-        <div className="mb-6">
-          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <path d="M12 18v-6" />
-              <path d="M9 15l3 3 3-3" />
-            </svg>
+        <div className="mb-8">
+          <div className="w-20 h-20 bg-gray-50 text-black rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+            <Printer className="w-10 h-10" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-800">
-            Export QR Code สินค้า
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            พิมพ์ QR Code สินค้า
           </h1>
-          <p className="text-gray-500 mt-2">
-            ระบบพบรายการสินค้าทั้งหมด {pdfData.length} รายการ (แยกตาม SKU){" "}
-            <br />
-            พร้อมให้คุณดาวน์โหลดเป็นไฟล์ PDF แล้ว
+          <p className="text-gray-500 mt-3 max-w-md mx-auto">
+            ระบบจัดเตรียมรายการสินค้าทั้งหมด{" "}
+            <span className="font-bold text-black">
+              {pdfData.length} รายการ
+            </span>
+            โดยเรียงลำดับตาม SKU เรียบร้อยแล้ว พร้อมสำหรับการสั่งพิมพ์
           </p>
         </div>
 
-        {/* ปุ่มดาวน์โหลด PDF */}
-        {pdfData.length > 0 && (
-          <PDFDownloadLink
-            document={<ProductPDF data={pdfData} />}
-            fileName="products-qrcode.pdf"
-            className="inline-block bg-black text-white px-8 py-3 rounded-xl font-medium hover:bg-gray-800 transition shadow-lg shadow-gray-200"
-          >
-            {({ blob, url, loading, error }) =>
-              loading ? "กำลังสร้างไฟล์ PDF..." : "ดาวน์โหลดไฟล์ PDF"
-            }
-          </PDFDownloadLink>
+        {pdfData.length > 0 ? (
+          <div className="flex flex-col items-center gap-4">
+            <PDFDownloadLink
+              document={<ProductPDF data={pdfData} />}
+              fileName={`product-qrcodes-${new Date().toISOString().split("T")[0]}.pdf`}
+              className="w-full sm:w-auto bg-black text-white px-10 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-gray-800 transition-all shadow-xl shadow-gray-200 active:scale-95"
+            >
+              {({ loading }) =>
+                loading ? (
+                  <>
+                    <Loader2 className="animate-spin w-5 h-5" /> กำลังสร้างไฟล์
+                    PDF...
+                  </>
+                ) : (
+                  <>
+                    <FileDown className="w-5 h-5" /> ดาวน์โหลด PDF (เรียงตาม
+                    SKU)
+                  </>
+                )
+              }
+            </PDFDownloadLink>
+            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium">
+              ข้อมูลถูกจัดเรียงจากน้อยไปมาก (A-Z, 0-9)
+            </p>
+          </div>
+        ) : (
+          <p className="text-red-500 font-medium">
+            ไม่พบข้อมูลสินค้าในระบบ กรุณาเพิ่มสินค้าก่อน
+          </p>
         )}
       </motion.div>
     </div>
