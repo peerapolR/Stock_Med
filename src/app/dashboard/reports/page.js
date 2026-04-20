@@ -92,7 +92,7 @@ export default function ReportsPage() {
             className="bg-black text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition shadow-sm flex items-center gap-2"
           >
             {({ loading }) =>
-              loading ? "กำลังเตรียมไฟล์ PDF..." : "📥 Export PDF"
+              loading ? "กำลังเตรียมไฟล์ PDF..." : "Export PDF"
             }
           </PDFDownloadLink>
         )}
@@ -209,12 +209,12 @@ export default function ReportsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    className="border-b border-gray-50 hover:bg-gray-50/50 transition"
+                    className="border-b border-gray-50 hover:bg-gray-50/50 transition whitespace-nowrap"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 ">
                       {new Date(tx.date).toLocaleString("th-TH")}
                     </td>
-                    <td className="px-6 py-4 font-medium">
+                    <td className="px-6 py-4 font-medium ">
                       {tx.type === "IN" ? (
                         <span className="text-green-600 bg-green-50 px-2 py-1 rounded-md text-xs">
                           นำเข้า
@@ -225,10 +225,10 @@ export default function ReportsPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 font-mono text-gray-800">
+                    <td className="px-6 py-4 font-mono text-gray-800 ">
                       {tx.sku}
                     </td>
-                    <td className="px-6 py-4">{tx.productName || "-"}</td>
+                    <td className="px-6 py-4 ">{tx.productName || "-"}</td>
                     <td
                       className={`px-6 py-4 text-right font-bold ${tx.type === "IN" ? "text-green-600" : "text-red-600"}`}
                     >
